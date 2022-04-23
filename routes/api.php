@@ -30,5 +30,5 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::post('job/apply', [JobController::class, 'apply']);
     
-    Route::post('staff/salary', [StaffController::class, 'payroll']);
+    Route::get('staff/salary', [StaffController::class, 'payroll']);
 });

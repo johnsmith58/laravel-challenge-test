@@ -3,23 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Services\EmployeeManagement\Staff;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 
 class StaffController extends Controller
 {
-    protected $staff;
+    use ApiResponser;
     
-    public function __construct(Staff $staff)
+    public function payroll(Staff $staff)
     {
-        $this->staff = $staff;
-    }
-    
-    public function payroll()
-    {
-        $data = $this->staff->salary();
-    
-        return response()->json([
-            'data' => $data
-        ]);
+        $data = $staff->salary();
+        return $this->success(200, $data);
     }
 }

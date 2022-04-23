@@ -6,8 +6,6 @@ use App\Exceptions\PostNotFoundException;
 use App\Exceptions\PostReactionException;
 use App\Http\Requests\PostReactionRequest;
 use App\Http\Resources\PostResource;
-use App\Models\Like;
-use App\Models\Post;
 use App\Repositories\PostMangement\PostRepository;
 use App\Services\PostManagement\PostService;
 use App\Traits\ApiResponser;
