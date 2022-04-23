@@ -2,59 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UserLoginRequest;
+use App\Exceptions\UserNotFoundException;
+use App\Http\Resources\UserResource;
+use App\Services\User\UserAuthentication;
 
 class LoginController extends Controller
 {
-    public function login(Request $request)
+    use ApiResponser;
+
+    public function login(UserLoginRequest $request, UserAuthentication $userAuthentication)
     {
-        if (!$request->email) {
-            return response()->json([
-                'status'  => 422,
-                'message' => 'email is required'
-            ]);
+        try {
+            $user = $userAuthentication->login($request->email, $request->password);
+            return $this->success(200, new UserResource($user));
+        } catch (UserNotFoundException $e) {
+            return $this->error(404, $e->getMessage());
         }
-        
-        if(strlen($request->email) < 6) {
-            return response()->json([
-                'status'  => 422,
-                'message' => 'email is invalid'
-            ]);
-        }
-    
-        if (!$request->password) {
-            return response()->json([
-                'status'  => 422,
-                'message' => 'password is required'
-            ]);
-        }
-        if(strlen($request->password) < 8) {
-            return response()->json([
-                'status'  => 422,
-                'message' => 'password is invalid'
-            ]);
-        }
-    
-        $user = User::where('email', $request->email)->first();
-        if (!$user) {
-            return response()->json([
-                'status'  => 404,
-                'message' => 'Model not found.'
-            ]);
-        }
-    
-        if (!Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'status'  => 404,
-                'message' => 'Invalid credentials'
-            ]);
-        }
-        
-        return response()->json([
-            'user' => $user,
-            'token' => $user->createToken('User-Token')->plainTextToken
-        ]);
     }
 }
