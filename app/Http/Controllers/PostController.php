@@ -2,30 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Models\Like;
 use App\Models\Post;
+use App\Repositories\PostMangement\PostRepository;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function list()
+
+    use ApiResponser;
+
+    /**
+     * @var PostRepository
+     * return PostResource
+     */
+    public function list(PostRepository $postRepository)
     {
-        $posts = Post::get();
-        
-        $data = collect();
-        foreach ($posts as $post) {
-            $data->add([
-                'id'          => $post->id,
-                'title'       => $post->title,
-                'description' => $post->description,
-                'tags'        => $post->tags,
-                'like_counts' => $post->likes->count(),
-                'created_at'  => $post->created_at,
-            ]);
-        }
-        return response()->json([
-            'data' => $data,
-        ]);
+        $posts = $postRepository->list();
+        return $this->success(200, PostResource::collection($posts));
     }
     
     public function toggleReaction(Request $request)
