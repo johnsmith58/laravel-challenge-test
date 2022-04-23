@@ -2,7 +2,10 @@
 
 namespace App\Services\InternetServiceProvider;
 
-class Mpt
+use App\Services\InternetServiceProvider\InternetCalTotalInterface;
+use App\Services\InternetServiceProvider\InternetSetMonthInterface;
+
+class Mpt implements InternetSetMonthInterface, InternetCalTotalInterface
 {
     protected $operator = 'mpt';
     
@@ -13,6 +16,7 @@ class Mpt
     public function setMonth(int $month)
     {
         $this->month = $month;
+        return $this;
     }
     
     public function calculateTotalAmount()

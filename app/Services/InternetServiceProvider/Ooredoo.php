@@ -2,7 +2,10 @@
 
 namespace App\Services\InternetServiceProvider;
 
-class Ooredoo extends Mpt
+use App\Services\InternetServiceProvider\InternetCalTotalInterface;
+use App\Services\InternetServiceProvider\InternetSetMonthInterface;
+
+class Ooredoo implements InternetSetMonthInterface, InternetCalTotalInterface
 {
     protected $operator = 'ooredoo';
     
@@ -13,6 +16,7 @@ class Ooredoo extends Mpt
     public function setMonth(int $month)
     {
         $this->month = $month;
+        return $this;
     }
     
     public function calculateTotalAmount()

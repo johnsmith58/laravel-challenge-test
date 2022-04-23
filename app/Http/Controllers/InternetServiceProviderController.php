@@ -2,31 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Services\InternetServiceProvider\Mpt;
 use App\Services\InternetServiceProvider\Ooredoo;
-use Illuminate\Http\Request;
+use App\Traits\ApiResponser;
 
 class InternetServiceProviderController extends Controller
 {
-    public function getMptInvoiceAmount(Request $request)
+    use ApiResponser;
+
+    public function getMptInvoiceAmount(Request $request, Mpt $internetServiceProvider)
     {
-        $mpt = new Mpt();
-        $mpt->setMonth($request->get('month') ?: 1);
-        $amount = $mpt->calculateTotalAmount();
-        
-        return response()->json([
-            'data' => $amount
-        ]);
+        $amount = $internetServiceProvider->setMonth($request->get('month') ?: 1)->calculateTotalAmount();
+        return $this->success(200, $amount);
     }
     
-    public function getOoredooInvoiceAmount(Request $request)
+    public function getOoredooInvoiceAmount(Request $request, Ooredoo $internetServiceProvider)
     {
-        $ooredoo = new Ooredoo();
-        $ooredoo->setMonth($request->get('month') ?: 1);
-        $amount = $ooredoo->calculateTotalAmount();
-        
-        return response()->json([
-            'data' => $amount
-        ]);
+        $amount = $internetServiceProvider->setMonth($request->get('month') ?: 1)->calculateTotalAmount();
+        return $this->success(200, $amount);
     }
 }
